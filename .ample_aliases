@@ -1,0 +1,98 @@
+### Terminal.
+alias k='clear; echo -e "\033c\e[3J"' #Clear Console
+
+# Find and Kill anything associated with this PID
+# ie: `kill_all_pids_for ngrok`
+kill_all_pids_for(){
+  find_pids_for $1 | xargs kill -9
+}
+
+find_all_pids_for(){
+  ps aux | grep $1 | grep -v grep | awk '{ print $2 }'
+}
+
+alias ao="cd ~/ao/"
+
+### Core
+alias core="cd ~/ao/ao-core"
+alias cshell='docker-compose run --service-ports core sh'
+alias cshell2='docker exec -it $(docker ps -q --filter="name=ao-core_core") sh'
+alias core-start='docker-sync start;docker-compose -f docker-compose.yml -f docker-compose-mac.yml run --service-ports core sh'
+alias core-stop='docker-sync stop;docker-compose stop'
+
+### WebApp
+alias webapp-start='docker-sync start;docker-compose -f docker-compose.yml -f docker-compose-mac.yml run --service-ports webapp bash'
+alias webapp="cd ~/ao/ao-webapp"
+
+### AmplePost
+alias post="cd ~/ao/ample-post"
+alias apshell='docker-compose run --service-ports ample-post sh'
+alias apshell2='docker exec -it $(docker ps -q --filter="name=ample-post") sh'
+alias ample-post-start='docker-sync start;docker-compose -f docker-compose.yml -f docker-compose-mac.yml run --service-ports ample-post sh'
+alias ample-post-stop='docker-sync stop;docker-compose stop'
+alias ngrok_amplepost='~/ngrok http --subdomain amplepost 3000'
+
+### AmplePost Staging
+alias ssh_amplepost_staging='ssh-add -t 43200 ~/.ssh/id_rsa; ssh -A ubuntu@10.0.83.51'
+
+### AmplePost Gem
+alias apgem="cd ~/ao/ao-core/vendor/gems/ample_post"
+
+### Docker
+
+docker-kill-all(){
+  docker stop $(docker ps -a -q);
+  docker rm $(docker ps -a -q);
+}
+
+
+### Git
+alias god="git checkout develop"
+
+alias git_undo_last_commit='git reset HEAD~'
+
+git_branch_name(){ # active branch name
+  git rev-parse --abbrev-ref HEAD
+}
+
+g_push_this_branch_to_origin(){
+  BRANCH_NAME="`git_branch_name`"
+  echo "OK `whoami`: git pushin origin $BRANCH_NAME"
+  git push origin $BRANCH_NAME
+}
+
+# create branch and check it out
+gbo(){ #git branch $1; git branch $1
+  git branch $1;
+  git checkout $1;
+  echo "Hey Luke, You are now in your new branch ___ $1 ___"
+}
+
+### RAILS
+runit_rails_runner(){
+  echo '--------<3 Rails Runner Zooooom--------'
+  echo '';echo '';echo '';
+  rails r "$1";
+  echo '';echo '';echo '';
+  echo '--------Booooom Rails Runner <3--------'
+}
+
+alias a="atom ."
+alias rc="bi; rails console"
+alias rs="bi; rails server"
+alias rg="rails generate"
+alias rgm="rails generate model"
+alias rgmig="rails generate migration"
+alias rgc="rails generate controller"
+alias be="bundle exec"
+alias mig="be rake db:migrate"
+alias rr="be rake routes | grep $1"
+
+
+# RBENV
+eval "$(rbenv init -)" #start rbenv
+
+alias bi="bundle install"
+
+
+alias to_bash='chsh -s /bin/bash'
